@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions } from 'astro:transitions';
+import { ClientRouter } from 'astro:transitions';
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
@@ -22,7 +22,8 @@ const {
   image = '/og-image.jpg'
 } = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const siteUrl = Astro.site || new URL('https://webget.com');
+const canonicalURL = new URL(Astro.url.pathname, siteUrl);
 ---
 
 <!doctype html>
@@ -59,7 +60,94 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     
-    <ViewTransitions />
+    <ClientRouter />
+    
+    <style is:global>
+      /* Fallback styles if Tailwind doesn't load */
+      :root {
+        --color-primary: #0f172a;
+        --color-accent: #3b82f6;
+        --color-accent-light: #60a5fa;
+      }
+      
+      body {
+        background-color: var(--color-primary) !important;
+        color: white !important;
+        font-family: 'Inter', system-ui, sans-serif !important;
+        margin: 0;
+        padding: 0;
+      }
+      
+      .bg-primary { background-color: #0f172a !important; }
+      .text-white { color: white !important; }
+      .bg-accent { background-color: #3b82f6 !important; }
+      .text-accent { color: #3b82f6 !important; }
+      
+      .gradient-text {
+        background: linear-gradient(to right, #3b82f6, #a855f7, #ec4899);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      
+      .glass {
+        background-color: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(24px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem 2rem;
+        background-color: #3b82f6;
+        color: white;
+        font-weight: 600;
+        border-radius: 9999px;
+        text-decoration: none;
+        transition: all 0.3s ease-out;
+      }
+      
+      .btn-primary:hover {
+        background-color: #60a5fa;
+        transform: scale(1.05);
+      }
+      
+      .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem 2rem;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        font-weight: 600;
+        border-radius: 9999px;
+        text-decoration: none;
+        background: transparent;
+        transition: all 0.3s ease-out;
+      }
+      
+      .btn-secondary:hover {
+        border-color: #3b82f6;
+        color: #3b82f6;
+      }
+      
+      .font-display { font-family: 'Space Grotesk', system-ui, sans-serif; }
+      .font-sans { font-family: 'Inter', system-ui, sans-serif; }
+      
+      /* Animation utilities */
+      [data-animate] {
+        opacity: 0;
+        transform: translateY(2rem);
+        transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+      }
+      
+      [data-animate].animate-in {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    </style>
   </head>
   <body class="bg-primary text-white font-sans antialiased overflow-x-hidden">
     <Header />
@@ -69,39 +157,49 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <Footer />
     
     <script>
-      // Smooth scroll for anchor links
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-          e.preventDefault();
-          const href = this.getAttribute('href');
-          if (href) {
-            const target = document.querySelector(href);
-            if (target) {
-              target.scrollIntoView({ behavior: 'smooth' });
+      function initPage() {
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const href = this.getAttribute('href');
+            if (href && href !== '#') {
+              const target = document.querySelector(href);
+              if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+              }
             }
-          }
+          });
         });
-      });
-      
-      // Intersection Observer for scroll animations
-      const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.1
-      };
-      
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-in');
-            observer.unobserve(entry.target);
-          }
+        
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+          root: null,
+          rootMargin: '0px',
+          threshold: 0.1
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('animate-in');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, observerOptions);
+        
+        // Reset animations and observe elements
+        document.querySelectorAll('[data-animate]').forEach(el => {
+          el.classList.remove('animate-in');
+          observer.observe(el);
         });
-      }, observerOptions);
+      }
       
-      document.querySelectorAll('[data-animate]').forEach(el => {
-        observer.observe(el);
-      });
+      // Run on initial load
+      initPage();
+      
+      // Re-run after View Transitions navigation
+      document.addEventListener('astro:page-load', initPage);
     </script>
   </body>
 </html>

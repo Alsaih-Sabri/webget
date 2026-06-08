@@ -1,0 +1,118 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import Services from '../components/Services.astro';
+import ContactForm from '../components/ContactForm.astro';
+---
+
+<Layout title="Premium Digital Services Agency">
+  <Hero />
+  <Services />
+  
+  <!-- Portfolio Preview Section -->
+  <section id="portfolio" class="section-padding bg-primary">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16">
+        <span data-animate class="inline-block px-4 py-2 rounded-full glass text-sm font-medium text-accent mb-4">
+          Our Work
+        </span>
+        <h2 data-animate class="text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4 delay-100">
+          Featured <span class="gradient-text">Projects</span>
+        </h2>
+        <p data-animate class="text-white/60 max-w-2xl mx-auto delay-200">
+          Explore our latest work and see how we've helped businesses transform their digital presence.
+        </p>
+      </div>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[1, 2, 3, 4, 5, 6].map((item, index) => (
+          <article 
+            data-animate 
+            class={`group relative overflow-hidden rounded-2xl aspect-[4/3] delay-${(index + 1) * 100}`}
+          >
+            <img 
+              src={`/images/image${(item % 5) + 1}.jpeg`}
+              alt={`Project ${item}`}
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              loading="lazy"
+              width="400"
+              height="300"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+              <div>
+                <h3 class="text-xl font-display font-semibold mb-2">Project Title</h3>
+                <p class="text-white/70 text-sm">Web Design & Development</p>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+      
+      <div class="text-center mt-12">
+        <a href="/portfolio" class="btn-secondary">
+          View All Projects
+        </a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- About Section -->
+  <section id="about" class="section-padding bg-gradient-to-b from-primary to-slate-900">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div data-animate>
+          <img 
+            src="/images/image1.jpeg" 
+            alt="About WebGet" 
+            class="rounded-2xl w-full aspect-[4/3] object-cover"
+            loading="lazy"
+            width="600"
+            height="450"
+          />
+        </div>
+        <div>
+          <span data-animate class="inline-block px-4 py-2 rounded-full glass text-sm font-medium text-accent mb-4">
+            About Us
+          </span>
+          <h2 data-animate class="text-3xl md:text-4xl font-display font-bold mb-6 delay-100">
+            We're Passionate About <span class="gradient-text">Digital Excellence</span>
+          </h2>
+          <p data-animate class="text-white/60 text-lg mb-6 delay-200">
+            With over 5 years of experience, we've helped 150+ businesses transform their online presence. Our team combines creativity with technical expertise to deliver results that exceed expectations.
+          </p>
+          <ul data-animate class="space-y-4 mb-8 delay-300">
+            <li class="flex items-center gap-3">
+              <div class="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <span class="text-white/80">Award-winning design team</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <div class="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <span class="text-white/80">100% client satisfaction guarantee</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <div class="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <span class="text-white/80">24/7 dedicated support</span>
+            </li>
+          </ul>
+          <a href="#contact" data-animate class="btn-primary delay-400">
+            Work With Us
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <ContactForm />
+</Layout>
